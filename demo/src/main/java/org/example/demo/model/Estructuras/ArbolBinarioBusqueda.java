@@ -1,6 +1,8 @@
 package org.example.demo.model.Estructuras;
 
 
+import org.example.demo.model.Exception.EstructuraVaciaException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
