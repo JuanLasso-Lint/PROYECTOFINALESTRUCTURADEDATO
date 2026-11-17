@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.pro_final_ed.viewController.InicioViewController">
+    <VBox spacing="15">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <Label text="Tablero Operativo de Apartamentos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+        <FlowPane fx:id="flowApartamentos" hgap="12" vgap="12"/>
+
+        <Separator/>
+        <HBox spacing="20">
+            <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #dee2e6; -fx-border-radius: 6;">
+                <Label text="Gestión de Estado, Tarifas y Check-In / Check-Out Rápido" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="cmbAptoEstado" promptText="Apartamento" prefWidth="120"/>
+                    <ComboBox fx:id="cmbNuevoEstado" promptText="Nuevo Estado" prefWidth="190"/>
+                    <TextField fx:id="txtMotivo" promptText="Motivo (si Fuera de servicio)" prefWidth="180"/>
+                    <Button text="Aplicar Estado" onAction="#onCambiarEstado" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                </HBox>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button text="Check-In Rápido" onAction="#onCheckInRapido" style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+                    <Button text="Check-Out Rápido (A Preparación)" onAction="#onCheckOutRapido" style="-fx-background-color: #ffc107; -fx-text-fill: black; -fx-font-weight: bold;"/>
+                    <TextField fx:id="txtNuevaTarifaApto" promptText="Nueva tarifa $" prefWidth="120"/>
+                    <Button text="Actualizar Tarifa" onAction="#onActualizarTarifaApto"/>
+                </HBox>
+                <TextArea fx:id="txtDetalleApto" prefRowCount="7" editable="false" promptText="Haz clic en 'Inspeccionar' en un apartamento para ver su detalle..."/>
+            </VBox>
+
+            <VBox spacing="8" prefWidth="350" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #dee2e6; -fx-border-radius: 6;">
+                <Label text="Registrar Nuevo Apartamento" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                <TextField fx:id="txtRegCodigo" promptText="Código (ej. 302)"/>
+                <TextField fx:id="txtRegNombre" promptText="Nombre"/>
+                <HBox spacing="6">
+                    <TextField fx:id="txtRegBloque" promptText="Bloque"/>
+                    <TextField fx:id="txtRegPiso" promptText="Piso"/>
+                    <TextField fx:id="txtRegCap" promptText="Capacidad"/>
+                    <TextField fx:id="txtRegDorm" promptText="Dorm."/>
+                </HBox>
+                <TextField fx:id="txtRegCarac" promptText="Características"/>
+                <TextField fx:id="txtRegTarifa" promptText="Tarifa por persona/noche"/>
+                <Button text="Guardar Apartamento" maxWidth="Infinity" onAction="#onRegistrarApartamento" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>
