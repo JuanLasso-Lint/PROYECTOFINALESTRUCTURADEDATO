@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.pro_final_ed.viewController.MapaViewController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Mapa Interactivo del Edificio (Grafo + Dijkstra + BFS/DFS)" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="txtOrigenRuta" text="CuartoAseo" promptText="Origen" prefWidth="110"/>
+        <TextField fx:id="txtDestinoRuta" text="202" promptText="Destino" prefWidth="110"/>
+        <Button text="Calcular Ruta (Dijkstra)" onAction="#onCalcularRuta" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+        <Button text="Agrupar por Bloque (BFS/DFS)" onAction="#onAgruparBloques" style="-fx-background-color: #17a2b8; -fx-text-fill: white;"/>
+        <Separator orientation="VERTICAL"/>
+        <TextField fx:id="txtCierreA" promptText="Nodo A" prefWidth="90"/>
+        <TextField fx:id="txtCierreB" promptText="Nodo B" prefWidth="90"/>
+        <Button text="Simular Cierre Pasillo" onAction="#onSimularCierrePasillo" style="-fx-background-color: #dc3545; -fx-text-fill: white;"/>
+    </HBox>
+    <Pane fx:id="paneMapa" prefHeight="430" style="-fx-background-color: white; -fx-border-color: #ced4da;"/>
+    <TextArea fx:id="txtResultadoMapa" prefRowCount="4" editable="false"/>
+</VBox>
