@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo.viewController.UsuarioViewController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Portal del Huésped (Perfil, Favoritos y Folio)" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="txtRegNombreH" promptText="Nombre" prefWidth="105"/>
+        <TextField fx:id="txtRegApellidoH" promptText="Apellido" prefWidth="105"/>
+        <TextField fx:id="txtRegDocH" promptText="Documento" prefWidth="105"/>
+        <DatePicker fx:id="dpRegFechaNac" promptText="Fecha Nac." prefWidth="125"/>
+        <TextField fx:id="txtRegTelH" promptText="Teléfono" prefWidth="100"/>
+        <TextField fx:id="txtRegCorreoH" promptText="Correo" prefWidth="130"/>
+        <TextField fx:id="txtRegFotoH" promptText="Ruta Foto (opc.)" prefWidth="120"/>
+        <Button text="Registrar Huésped" onAction="#onRegistrarHuesped" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+    </HBox>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="txtDocConsulta" text="115" promptText="Documento consulta" prefWidth="140"/>
+        <Button text="Consultar Perfil" onAction="#onConsultarHuesped" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+        <TextField fx:id="txtAptoFavorito" promptText="Cód. Apto Fav" prefWidth="105"/>
+        <Button text="+ Favorito" onAction="#onAgregarFavorito"/>
+        <Button text="Pagar Anticipo (30%)" onAction="#onPagarAnticipo" style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+        <Button text="Deshacer Último Mov. (Pila)" onAction="#onDeshacerUltimoMovimientoFolio" style="-fx-background-color: #f39c12; -fx-text-fill: black;"/>
+        <Button text="Cancelar Reserva" onAction="#onCancelarReservaHuesped" style="-fx-background-color: #dc3545; -fx-text-fill: white;"/>
+    </HBox>
+    <TextArea fx:id="txtPerfilHuesped" VBox.vgrow="ALWAYS" editable="false" style="-fx-font-family: 'Consolas', monospace;"/>
+</VBox>

@@ -5,6 +5,7 @@ import org.example.demo.model.Exception.EstructuraVaciaException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+
 public class Pila<T> implements Iterable<T> {
     private Nodo<T> cima;
     private int tam;

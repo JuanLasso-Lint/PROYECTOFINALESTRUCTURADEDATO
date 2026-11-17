@@ -33,4 +33,5 @@ public class Temporada implements Comparable<Temporada> {
     public String toString() {
         return nombre + " (" + fechaInicio + " a " + fechaFin + ", x" + multiplicador + ")";
     }
+
 }

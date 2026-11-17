@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.demo.viewController.MainViewController">
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #1b263b; -fx-padding: 12 20;">
+            <Label text="GESTIÓN HOTELERA - APARTA-SUITES UQ" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblTurnoActual" text="Recepcionista en turno: -" style="-fx-text-fill: #64b5f6; -fx-font-weight: bold;"/>
+            <Button text="Rotar Turno" onAction="#onRotarTurno" style="-fx-background-color: #415a77; -fx-text-fill: white; -fx-cursor: hand;"/>
+            <Button text="Recargar Escenario" onAction="#onCargarDatosIniciales" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <Label fx:id="lblEstadoCarga" text="Aptos activos: 0" style="-fx-text-fill: #e0e1dd;"/>
+            <Button fx:id="btnAtras" text="← Atrás (Pila)" onAction="#onRegresarAtras" style="-fx-background-color: #f39c12; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+    <left>
+        <VBox spacing="8" prefWidth="220" style="-fx-background-color: #0d1b2a; -fx-padding: 15;">
+            <Label text="MENÚ DE NAVEGACIÓN" style="-fx-text-fill: #778da9; -fx-font-weight: bold; -fx-font-size: 11px;"/>
+            <Button text="1. Apartamentos (Tablero)" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irInicio" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="2. Panel de Reservas" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irReservas" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="3. Calendario Ocupación" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irCalendario" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="4. Panel de Huéspedes" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irUsuario" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="5. Trabajadores y Temporadas" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irEmpleados" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="6. Panel de Preparación" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irPreparacion" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="7. Mapa Interactivo" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irMapa" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+            <Button text="8. Estadísticas" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#irEstadisticas" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f8f9fa;"/>
+    </center>
+</BorderPane>

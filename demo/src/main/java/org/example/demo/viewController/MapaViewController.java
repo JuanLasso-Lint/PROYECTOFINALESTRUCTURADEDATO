@@ -11,10 +11,11 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.Apartamento;
-import org.example.pro_final_ed.model.Estructuras.Grafo;
-import org.example.pro_final_ed.model.Estructuras.ListaDoble;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Apartamento;
+import org.example.demo.model.Estructuras.Grafo;
+import org.example.demo.model.Estructuras.ListaDoble;
+
 
 import java.util.HashMap;
 import java.util.Map;

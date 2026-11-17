@@ -7,7 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import org.example.pro_final_ed.controller.ModelFactoryController;
+import org.example.demo.controller.ModelFactoryController;
 
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public class MainViewController {
     private void cargarVista(String fxmlName, boolean registrarEnPila) {
         try {
             if (registrarEnPila) mfc.registrarNavegacion(fxmlName);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pro_final_ed/" + fxmlName));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/" + fxmlName));
             Node vista = loader.load();
             contentArea.getChildren().setAll(vista);
             actualizarBarraSuperior();

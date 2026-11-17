@@ -5,11 +5,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.Apartamento;
-import org.example.pro_final_ed.model.Huesped;
-import org.example.pro_final_ed.model.MovimientoFolio;
-import org.example.pro_final_ed.model.Reserva;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Apartamento;
+import org.example.demo.model.Huesped;
+import org.example.demo.model.MovimientoFolio;
+import org.example.demo.model.Reserva;
+
 
 import java.time.LocalDate;
 
@@ -85,10 +86,10 @@ public class UsuarioViewController {
         for (Reserva r : mfc.getHotel().getHistorialGlobalReservas()) {
             if (r.getTitular().getDocumento().equals(doc)) {
                 sb.append("#").append(r.getId()).append(" | Apto ").append(r.getApartamentoAsignado().getCodigo())
-                  .append(" | Fechas: ").append(r.getFechaEntrada()).append(" a ").append(r.getFechaSalida())
-                  .append(" | Estado: ").append(r.getEstado())
-                  .append(" | Cargos: $").append(String.format("%.0f", r.calcularTotalCargos()))
-                  .append(" | Pagado Neto: $").append(String.format("%.0f", r.calcularTotalPagadoNeto())).append("\n");
+                        .append(" | Fechas: ").append(r.getFechaEntrada()).append(" a ").append(r.getFechaSalida())
+                        .append(" | Estado: ").append(r.getEstado())
+                        .append(" | Cargos: $").append(String.format("%.0f", r.calcularTotalCargos()))
+                        .append(" | Pagado Neto: $").append(String.format("%.0f", r.calcularTotalPagadoNeto())).append("\n");
                 for (MovimientoFolio mf : r.getFolio()) {
                     sb.append("   -> ").append(mf.toString()).append("\n");
                 }
@@ -115,8 +116,8 @@ public class UsuarioViewController {
         Reserva ultima = null;
         for (Reserva r : mfc.getHotel().getHistorialGlobalReservas()) {
             if (r.getTitular().getDocumento().equals(doc) &&
-                r.getEstado() != org.example.pro_final_ed.model.EstadoReserva.CANCELADA &&
-                r.getEstado() != org.example.pro_final_ed.model.EstadoReserva.FINALIZADA) {
+                    r.getEstado() != org.example.demo.model.EstadoReserva.CANCELADA &&
+                    r.getEstado() != org.example.demo.model.EstadoReserva.FINALIZADA) {
                 ultima = r;
             }
         }

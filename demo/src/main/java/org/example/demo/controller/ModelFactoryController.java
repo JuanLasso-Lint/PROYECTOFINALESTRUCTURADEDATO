@@ -1,8 +1,10 @@
-package org.example.pro_final_ed.controller;
+package org.example.demo.controller;
 
-import org.example.pro_final_ed.model.*;
-import org.example.pro_final_ed.model.Estructuras.ListaDoble;
-import org.example.pro_final_ed.model.Estructuras.Pila;
+
+
+import org.example.demo.model.*;
+import org.example.demo.model.Estructuras.ListaDoble;
+import org.example.demo.model.Estructuras.Pila;
 
 import java.io.BufferedReader;
 import java.io.IOException;

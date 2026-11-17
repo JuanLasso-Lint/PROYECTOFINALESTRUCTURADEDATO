@@ -1,4 +1,4 @@
-package org.example.pro_final_ed.model;
+package org.example.demo.model;
 
 public enum CanalReserva {
     PORTAL,

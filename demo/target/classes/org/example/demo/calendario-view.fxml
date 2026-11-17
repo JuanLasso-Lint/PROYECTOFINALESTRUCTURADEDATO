@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo.viewController.CalendarioViewController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Calendario de Ocupación por Apartamento" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Fecha inicial:"/>
+        <DatePicker fx:id="dpFechaInicio"/>
+        <Button text="Actualizar Matriz" onAction="#generarMatriz"/>
+    </HBox>
+    <TextArea fx:id="txtMatrizCalendario" VBox.vgrow="ALWAYS" editable="false" style="-fx-font-family: 'Consolas', monospace; -fx-font-size: 13px;"/>
+</VBox>

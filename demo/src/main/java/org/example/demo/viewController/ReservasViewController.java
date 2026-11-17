@@ -2,9 +2,12 @@ package org.example.demo.viewController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.*;
-import org.example.pro_final_ed.model.Estructuras.ListaDoble;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Apartamento;
+import org.example.demo.model.CanalReserva;
+import org.example.demo.model.Estructuras.ListaDoble;
+import org.example.demo.model.Huesped;
+import org.example.demo.model.Reserva;
 
 import java.time.LocalDate;
 

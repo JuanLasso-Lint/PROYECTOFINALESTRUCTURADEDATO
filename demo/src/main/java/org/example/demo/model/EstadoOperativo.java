@@ -1,6 +1,8 @@
 package org.example.demo.model;
 
+
 public enum EstadoOperativo {
+
     PREPARADO,
     OCUPADO,
     PENDENTE_DE_PREPARACION,

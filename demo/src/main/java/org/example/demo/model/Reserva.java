@@ -1,8 +1,8 @@
-package org.example.pro_final_ed.model;
+package org.example.demo.model;
 
-import org.example.pro_final_ed.model.Estructuras.ListaDoble;
-import org.example.pro_final_ed.model.Estructuras.Pila;
-import org.example.pro_final_ed.model.Exception.ReglaNegocioException;
+
+import org.example.demo.model.Estructuras.*;
+import org.example.demo.model.Exception.ReglaNegocioException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

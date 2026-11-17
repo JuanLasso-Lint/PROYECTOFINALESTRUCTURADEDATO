@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.pro_final_ed.viewController.EstadisticasViewController">
+      fx:controller="org.example.demo.viewController.EstadisticasViewController">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
     <HBox spacing="15" alignment="CENTER_LEFT">
         <Label text="Estadísticas y Reportes del Alojamiento" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>

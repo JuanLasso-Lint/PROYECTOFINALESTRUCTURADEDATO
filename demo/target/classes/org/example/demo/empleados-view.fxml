@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo.viewController.EmpleadosViewController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Gestión de Trabajadores, Turnos Circulares y Temporadas" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="txtNombreEmp" promptText="Nombre completo" prefWidth="190"/>
+        <TextField fx:id="txtCodigoEmp" promptText="Código (ej. E04)" prefWidth="115"/>
+        <ComboBox fx:id="cmbCargoEmp" prefWidth="150"/>
+        <Button text="Registrar Trabajador" onAction="#onRegistrarEmpleado" style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+        <Button text="Rotar Turno Recepción" onAction="#onRotarTurnoEmp"/>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="txtNombreTemp" promptText="Nombre Temporada" prefWidth="180"/>
+        <DatePicker fx:id="dpInicioTemp" promptText="Fecha Inicio" prefWidth="135"/>
+        <DatePicker fx:id="dpFinTemp" promptText="Fecha Fin" prefWidth="135"/>
+        <TextField fx:id="txtMultTemp" promptText="Multiplicador (ej. 1.25)" prefWidth="150"/>
+        <Button text="Agregar Temporada" onAction="#onRegistrarTemporada" style="-fx-background-color: #1b263b; -fx-text-fill: white;"/>
+    </HBox>
+    <TextArea fx:id="txtListaEmpleados" VBox.vgrow="ALWAYS" editable="false" style="-fx-font-family: 'Consolas', monospace;"/>
+</VBox>

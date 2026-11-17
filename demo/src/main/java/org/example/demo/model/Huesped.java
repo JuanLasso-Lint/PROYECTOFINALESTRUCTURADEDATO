@@ -1,5 +1,7 @@
 package org.example.demo.model;
 
+import org.example.demo.model.Estructuras.Conjunto;
+
 import java.time.LocalDate;
 import java.time.Period;
 

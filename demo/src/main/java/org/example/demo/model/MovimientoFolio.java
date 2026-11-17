@@ -1,4 +1,4 @@
-package org.example.pro_final_ed.model;
+package org.example.demo.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

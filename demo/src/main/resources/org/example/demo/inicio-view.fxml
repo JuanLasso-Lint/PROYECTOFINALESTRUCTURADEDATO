@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.pro_final_ed.viewController.InicioViewController">
+            fx:controller="org.example.demo.viewController.InicioViewController">
     <VBox spacing="15">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
         <Label text="Tablero Operativo de Apartamentos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>

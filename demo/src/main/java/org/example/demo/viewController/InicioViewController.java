@@ -1,14 +1,14 @@
-package org.example.pro_final_ed.viewController;
+package org.example.demo.viewController;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.Apartamento;
-import org.example.pro_final_ed.model.EstadoOperativo;
-import org.example.pro_final_ed.model.Reserva;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Apartamento;
+import org.example.demo.model.EstadoOperativo;
+import org.example.demo.model.Reserva;
 
 import java.time.LocalTime;
 

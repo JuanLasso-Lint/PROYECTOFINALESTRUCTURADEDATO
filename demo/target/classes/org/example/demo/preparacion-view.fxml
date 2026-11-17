@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo.viewController.PreparacionViewController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Panel de Preparación y Limpieza (Cola de Prioridad + Ruta Dijkstra)" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Nodo Origen Personal:"/>
+        <TextField fx:id="txtOrigenLimpieza" text="CuartoAseo" prefWidth="150"/>
+        <Button text="Atender Siguiente Limpieza" onAction="#onAtenderLimpieza" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Refrescar Cola" onAction="#actualizarCola"/>
+    </HBox>
+    <TextArea fx:id="txtColaLimpieza" VBox.vgrow="ALWAYS" editable="false" style="-fx-font-family: 'Consolas', monospace; -fx-font-size: 13px;"/>
+</VBox>

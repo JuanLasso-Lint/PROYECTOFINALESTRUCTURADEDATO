@@ -1,10 +1,11 @@
-package org.example.pro_final_ed.viewController;
+package org.example.demo.viewController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.Apartamento;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Apartamento;
+
 
 import java.time.LocalDate;
 

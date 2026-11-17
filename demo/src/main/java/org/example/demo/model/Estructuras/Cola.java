@@ -1,6 +1,7 @@
-package org.example.pro_final_ed.model.Estructuras;
+package org.example.demo.model.Estructuras;
 
-import org.example.pro_final_ed.model.Exception.EstructuraVaciaException;
+import org.example.demo.model.Exception.EstructuraVaciaException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -35,6 +36,8 @@ public class Cola<T> implements Iterable<T> {
     }
 
     public boolean estaVacia() { return frente == null; }
+
+
     public int getTam() { return tam; }
 
     @Override
@@ -47,6 +50,10 @@ public class Cola<T> implements Iterable<T> {
                 T d = actual.getDato();
                 actual = actual.getSiguiente();
                 return d;
+
+
+
+
             }
         };
     }

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="12" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.pro_final_ed.viewController.ReservasViewController">
+      fx:controller="org.example.demo.viewController.ReservasViewController">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
     <Label text="Panel de Reservas y Disponibilidad" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
     <HBox spacing="10" alignment="CENTER_LEFT">

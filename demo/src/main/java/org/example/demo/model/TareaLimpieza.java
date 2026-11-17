@@ -3,6 +3,7 @@ package org.example.demo.model;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 public class TareaLimpieza {
     private final String codigoApartamento;
     private final boolean entradaHoy;

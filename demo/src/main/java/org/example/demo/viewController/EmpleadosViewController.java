@@ -1,10 +1,11 @@
-package org.example.pro_final_ed.viewController;
+package org.example.demo.viewController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.pro_final_ed.controller.ModelFactoryController;
-import org.example.pro_final_ed.model.Empleado;
-import org.example.pro_final_ed.model.Temporada;
+import org.example.demo.controller.ModelFactoryController;
+import org.example.demo.model.Empleado;
+import org.example.demo.model.Temporada;
+
 
 public class EmpleadosViewController {
 
