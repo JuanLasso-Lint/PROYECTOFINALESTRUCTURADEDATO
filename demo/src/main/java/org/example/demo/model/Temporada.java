@@ -15,6 +15,7 @@ public class Temporada implements Comparable<Temporada> {
         this.multiplicador = multiplicador;
     }
 
+    //verifica si una fecha cae dentro de ese rango de esa temporada
     public boolean aplicaA(LocalDate fecha) {
         return !fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaFin);
     }

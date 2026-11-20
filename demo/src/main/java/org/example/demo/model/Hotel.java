@@ -18,14 +18,27 @@ import java.util.Iterator;
 public class Hotel {
 
 
+    public static final Comparator<Apartamento> CMP_PRECIO = Comparator.comparingDouble(Apartamento::getTarifaPorPersona);
+    public static final Comparator<Apartamento> CMP_CAPACIDAD = Comparator.comparingInt(Apartamento::getCapacidadMaxima);
+    public static final Comparator<Apartamento> CMP_DORMITORIOS = Comparator.comparingInt(Apartamento::getNumDormitorios);
+    public static final Comparator<TareaLimpieza> CMP_PRIORIDAD_LIMPIEZA = Comparator.comparing(TareaLimpieza::isEntradaHoy).reversed().thenComparing(TareaLimpieza::getHoraLlegadaSiguiente).thenComparing(TareaLimpieza::getFechaSolicitud);
+
+
+
     private final ArbolBinarioBusqueda<Apartamento> catalogoApartamentos;
     private final ArbolBinarioBusqueda<Huesped> registroHuespedes;
     private final ArbolBinarioBusqueda<Empleado> empleados;
-    private final ListaCircularSimple<Empleado> turnosRecepcion;
-    private final ListaDoble<Temporada> temporadas;
 
     private final ArbolBinarioBusqueda<ParClaveValor<String, ArbolBinarioBusqueda<Reserva>>> agendaPorApartamento;
+
+
+
+    private final ListaDoble<Temporada> temporadas;
     private final ListaDoble<Reserva> historialGlobalReservas;
+
+    private final ListaCircularSimple<Empleado> turnosRecepcion;
+
+
     private final Cola<Reserva> solicitudesExternas;
     private final ColaPrioridad<TareaLimpieza> colaLimpieza;
     private final Grafo<String> mapaEdificio;
@@ -47,6 +60,8 @@ public class Hotel {
         this.mapaEdificio = new Grafo<>();
     }
 
+
+
     private ArbolBinarioBusqueda<Reserva> obtenerAgenda(String codigoApto) {
         ParClaveValor<String, ArbolBinarioBusqueda<Reserva>> par =
                 agendaPorApartamento.buscarElemento(new ParClaveValor<>(codigoApto, null));
@@ -58,6 +73,8 @@ public class Hotel {
         return par.getValor();
     }
 
+
+//al registrar un apartamento se le crea de una vez su carpeta vacía en agendaPorApartamento
     public boolean registrarApartamento(Apartamento apto) {
         if (apto == null) throw new IllegalArgumentException("Apartamento nulo.");
         boolean insertado = catalogoApartamentos.insertar(apto);
@@ -67,11 +84,14 @@ public class Hotel {
         return insertado;
     }
 
+
     public boolean registrarHuesped(Huesped h) {
         if (h == null) throw new IllegalArgumentException("Huésped nulo.");
         return registroHuespedes.insertar(h);
     }
 
+
+    //si el empleado tiene cargo "Recepcionista", también entra al anillo de turnosRecepcion
     public boolean registrarEmpleado(Empleado emp) {
         if (emp == null) throw new IllegalArgumentException("Empleado nulo.");
         boolean insertado = empleados.insertar(emp);
@@ -81,17 +101,19 @@ public class Hotel {
         return insertado;
     }
 
+
+
     public void registrarTemporada(Temporada t) {
         if (t != null) temporadas.agregarAlFinal(t);
     }
 
-    public void actualizarTarifaApartamento(String codigo, double nuevaTarifa) {
-        Apartamento apto = buscarApartamento(codigo);
-        if (apto == null) throw new ReglaNegocioException("Apartamento no encontrado: " + codigo);
-        if (nuevaTarifa <= 0) throw new ReglaNegocioException("La tarifa debe ser mayor a cero.");
-        apto.setTarifaPorPersona(nuevaTarifa);
-    }
 
+
+
+
+
+    //Como los árboles ordenan los objetos usando compareTo (que solo mira el codigo o el documento), para buscar un apartamento
+    // crea un Apartamento vacío poniendo únicamente el codigo buscado.
     public Apartamento buscarApartamento(String codigo) {
         if (codigo == null) return null;
         Apartamento clave = new Apartamento(codigo, "", 1, 1, 1, 1, "", 0, EstadoOperativo.PREPARADO, null);
@@ -104,6 +126,25 @@ public class Hotel {
         return registroHuespedes.buscarElemento(clave);
     }
 
+
+
+
+
+
+
+    public void actualizarTarifaApartamento(String codigo, double nuevaTarifa) {
+        Apartamento apto = buscarApartamento(codigo);
+        if (apto == null) throw new ReglaNegocioException("Apartamento no encontrado: " + codigo);
+        if (nuevaTarifa <= 0) throw new ReglaNegocioException("La tarifa debe ser mayor a cero.");
+        apto.setTarifaPorPersona(nuevaTarifa);
+    }
+
+
+
+
+
+//Avanza el puntero de la ListaCircularSimple
+// al siguiente recepcionista y devuelve su nombre y código.
     public String rotarRecepcionista() {
         if (turnosRecepcion.estaVacia()) return "Sin recepcionistas";
         Empleado sig = turnosRecepcion.rotar();
@@ -116,6 +157,13 @@ public class Hotel {
         return act.getNombre() + " (" + act.getCodigo() + ")";
     }
 
+
+
+
+
+
+//Revisa al titular y a los acompañantes; si alguno tiene menos de 6 años
+ //no paga y no se suma a personasQuePagan.
     public double cotizarEstanciaConMenores(Reserva reserva) {
         Apartamento apto = reserva.getApartamentoAsignado();
         double tarifaBase = apto.getTarifaPorPersona();
@@ -128,6 +176,12 @@ public class Hotel {
         }
         return liquidarNochesRecursivo(reserva.getNoches().iterator(), personasQuePagan, tarifaBase);
     }
+
+
+
+
+//Recorre la lista de noches de la reserva una por una.
+// En cada llamada mira si esa fecha cae dentro de alguna Temporada
 
     private double liquidarNochesRecursivo(Iterator<LocalDate> itNoches, int personasQuePagan, double tarifaBase) {
         if (!itNoches.hasNext()) return 0.0;
@@ -144,9 +198,18 @@ public class Hotel {
         return 1.0;
     }
 
+
+
+
+
+
+//Primero revisa que el apartamento no esté FUERA_DE_SERVICO
     public boolean estaDisponible(Apartamento apto, LocalDate entrada, LocalDate salida) {
         if (apto.getEstadoOperativo() == EstadoOperativo.FUERA_DE_SERVICO) return false;
+
+//entra al árbol de reservas de ese apartamento y usa buscarRecursivo con una condición lambda:
         ArbolBinarioBusqueda<Reserva> agenda = obtenerAgenda(apto.getCodigo());
+        //alguna reserva activa uyas fechas se crucen (seSolapaCon), devuelve false
         return !agenda.buscarRecursivo(r ->
                 r.getEstado() != EstadoReserva.CANCELADA &&
                         r.getEstado() != EstadoReserva.FINALIZADA &&
@@ -155,6 +218,10 @@ public class Hotel {
         );
     }
 
+
+
+    //Verifica que el apartamento funcione, que no se supere capacidadMaxima y que las fechas estén libres.
+    // Si la reserva viene por canal EXTERNA, la manda a hacer fila en solicitudesExternas
     public void validarYRegistrarReserva(Reserva reserva) {
         if (reserva == null) throw new IllegalArgumentException("La reserva no puede ser nula.");
         Apartamento apto = reserva.getApartamentoAsignado();
@@ -177,14 +244,21 @@ public class Hotel {
         }
     }
 
+
+
+    //Saca la solicitud más antigua de la cola
     public boolean procesarSiguienteSolicitudExterna() {
         if (solicitudesExternas.estaVacia()) return false;
         Reserva sol = solicitudesExternas.desencolar();
+
+//revisar si las fechas siguen libres confirma
         if (estaDisponible(sol.getApartamentoAsignado(), sol.getFechaEntrada(), sol.getFechaSalida())) {
             sol.setEstado(EstadoReserva.CONFIRMADA);
             obtenerAgenda(sol.getApartamentoAsignado().getCodigo()).insertar(sol);
             historialGlobalReservas.agregarAlFinal(sol);
             return true;
+
+        //si ya se ocuparon, la cancela y suma 1 a conflictosCanalExterno.
         } else {
             sol.setEstado(EstadoReserva.CANCELADA);
             conflictosCanalExterno++;
@@ -192,6 +266,8 @@ public class Hotel {
             return false;
         }
     }
+
+
 
     public void pagarAnticipoPortal(Reserva reserva, double monto, double totalEstancia) {
         if (monto < totalEstancia * 0.30) {
@@ -201,6 +277,10 @@ public class Hotel {
         reserva.setEstado(EstadoReserva.CONFIRMADA);
     }
 
+
+
+    //Recorre el historial y cancela automáticamente las reservas PENDIENTE
+    // que lleven más de 24 horas sin pagarse, liberándolas de la agenda.
     public int cancelarReservasVencidas(LocalDateTime corte) {
         int canceladas = 0;
         for (Reserva r : historialGlobalReservas) {
@@ -214,10 +294,18 @@ public class Hotel {
         return canceladas;
     }
 
+
     public double calcularTotalPagadoFolio(Reserva reserva) {
         return reserva.calcularTotalPagadoNeto();
     }
 
+
+
+
+    //Calcula cuántos días faltan para el viaje:
+    // si faltan 7 días o más devuelve el 100% de lo pagado;
+    // si faltan entre 2 y 6 días devuelve el 50%;
+    // y si falta menos, 0%
     public double previsualizarReembolso(Reserva reserva, LocalDate fechaCancelacion) {
         long diasAnticipacion = ChronoUnit.DAYS.between(fechaCancelacion, reserva.getFechaEntrada());
         double pagadoNeto = calcularTotalPagadoFolio(reserva);
@@ -243,6 +331,10 @@ public class Hotel {
         return reembolso;
     }
 
+
+
+
+    //Exige que la reserva esté CONFIRMADA y el apartamento PREPARADO.
     public void registrarCheckIn(Reserva r) {
         if (r == null) throw new IllegalArgumentException("Reserva nula.");
         if (r.getEstado() != EstadoReserva.CONFIRMADA) {
@@ -252,10 +344,16 @@ public class Hotel {
         if (apto.getEstadoOperativo() != EstadoOperativo.PREPARADO) {
             throw new ReglaNegocioException("El apartamento " + apto.getCodigo() + " no está PREPARADO (estado: " + apto.getEstadoOperativo() + ").");
         }
+
+       //Cambia la reserva a EN_CURSO y el apartamento a OCUPADO.
         r.setEstado(EstadoReserva.EN_CURSO);
         apto.setEstadoOperativo(EstadoOperativo.OCUPADO);
     }
 
+
+
+    //Si el huésped sale después de las 12:00 m.,
+    // le suma al folio un cargo del 25% por Late Check-Out.
     public void registrarCheckOut(Reserva r, boolean entradaHoy, LocalTime horaSalida) {
         if (r == null) throw new IllegalArgumentException("Reserva nula.");
         if (r.getEstado() != EstadoReserva.EN_CURSO) {
@@ -265,11 +363,16 @@ public class Hotel {
             double recargo = r.getApartamentoAsignado().getTarifaPorPersona() * 0.25;
             r.registrarMovimiento("Recargo Late Check-Out", recargo, true);
         }
+
+        //, marca el apartamento como PENDENTE_DE_PREPARACION
+        // y mete una TareaLimpieza
         r.setEstado(EstadoReserva.FINALIZADA);
         Apartamento apto = r.getApartamentoAsignado();
         apto.setEstadoOperativo(EstadoOperativo.PENDENTE_DE_PREPARACION);
-        encolarTareaPreparacion(apto.getCodigo(), entradaHoy);
+        encolarTareaPreparacion(apto.getCodigo(), entradaHoy); //si llega otro huésped ese mismo día para darle prioridad máxima).
     }
+
+
 
     private boolean tieneEntradaHoy(String codigoApto) {
         LocalDate hoy = LocalDate.now();
@@ -281,6 +384,10 @@ public class Hotel {
         return false;
     }
 
+
+
+
+
     private void encolarTareaPreparacion(String codigoApto, boolean forzarEntradaHoy) {
         boolean entradaHoy = forzarEntradaHoy || tieneEntradaHoy(codigoApto);
         TareaLimpieza tarea = new TareaLimpieza(codigoApto, entradaHoy);
@@ -289,21 +396,24 @@ public class Hotel {
         }
     }
 
+
+    //ira cuál es la tarea más urgente al frente de colaLimpieza
     public ListaDoble<String> atenderSiguienteLimpieza(String nodoOrigen) {
         if (colaLimpieza.estaVacia()) {
             throw new ReglaNegocioException("No hay apartamentos pendientes en la cola de limpieza.");
         }
         TareaLimpieza tarea = colaLimpieza.verFrente();
+//le pide al grafo mapaEdificio la ruta más corta con Dijkstra desde donde está el empleado
         ListaDoble<String> ruta = mapaEdificio.dijkstraRutaMasCorta(nodoOrigen, tarea.getCodigoApartamento());
 
-        colaLimpieza.desencolar();
+        colaLimpieza.desencolar(); //saca la tarea de la cola y mide el tiempo
         long segs = Math.max(1, Duration.between(tarea.getFechaSolicitud(), LocalDateTime.now()).getSeconds());
         segundosTotalesPreparacion += segs;
         preparacionesCompletadas++;
 
         Apartamento apto = buscarApartamento(tarea.getCodigoApartamento());
         if (apto != null && apto.getEstadoOperativo() != EstadoOperativo.FUERA_DE_SERVICO) {
-            apto.setEstadoOperativo(EstadoOperativo.PREPARADO);
+            apto.setEstadoOperativo(EstadoOperativo.PREPARADO); //cambia esl estado del apartamentp a PREPARADo
         }
         return ruta;
     }
@@ -322,13 +432,24 @@ public class Hotel {
         }
     }
 
+
+
+
+
+
+
     public ListaDoble<String> detectarInalcanzablesSiCierraPasillo(String origen, String nodoA, String nodoB) {
         Double pesoOriginal = mapaEdificio.obtenerPesoArista(nodoA, nodoB);
         if (pesoOriginal == null) {
             throw new ReglaNegocioException("No existe un pasillo directo entre " + nodoA + " y " + nodoB + ".");
         }
+
+
         ListaDoble<String> inalcanzables = new ListaDoble<>();
-        mapaEdificio.eliminarArista(nodoA, nodoB);
+        mapaEdificio.eliminarArista(nodoA, nodoB); //Borra temporalmente una conexión en el grafo
+
+
+        //va desde la recepcion para ver a que apartamentos si se puede llegar
         try {
             Conjunto<String> alcanzables = mapaEdificio.bfsAlcanzables(origen);
             for (String v : mapaEdificio) {
@@ -337,36 +458,65 @@ public class Hotel {
                 }
             }
         } finally {
-            mapaEdificio.agregarArista(nodoA, nodoB, pesoOriginal);
+            mapaEdificio.agregarArista(nodoA, nodoB, pesoOriginal); // Y guada los quee quedaron aislados
         }
         return inalcanzables;
     }
 
+
+
+    //recorrer los apartamentos alcanzables y los va metiendo en un árbol temporal ordenado por número de bloque
     public String agruparApartamentosPorBloqueBFS(String nodoOrigen) {
+
+
+        //Guarda en un Conjunto sin duplicados
+        // todos los nodos conectados a los que se puede llegar.
         Conjunto<String> alcanzables = mapaEdificio.bfsAlcanzables(nodoOrigen);
+        //e cada nodo almacenará un par clave-valor: la clave es el número de bloque (Integer)
+        // y el valor es una lista doble con los apartamentos de ese bloque.
         ArbolBinarioBusqueda<ParClaveValor<Integer, ListaDoble<String>>> gruposPorBloque = new ArbolBinarioBusqueda<>();
 
-        for (String nodo : alcanzables) {
-            Apartamento apto = buscarApartamento(nodo);
-            if (apto != null) {
+        for (String nodo : alcanzables) { //Recorre uno por uno cada nodo obtenido
+            Apartamento apto = buscarApartamento(nodo); //mira ese nodo corresponde a un apartamento registrado.
+            if (apto != null) { //procesar únicamente nodos que sean apartamentos
                 int bloque = apto.getBloque();
+
+
+
                 ParClaveValor<Integer, ListaDoble<String>> par = gruposPorBloque.buscarElemento(new ParClaveValor<>(bloque, null));
-                if (par == null) {
-                    ListaDoble<String> lista = new ListaDoble<>();
-                    lista.agregarAlFinal(apto.getCodigo() + " (" + apto.getNombre() + ")");
+
+
+                if (par == null) { //Entra aquí si es el primer apartamento encontrado de ese bloque.
+                    ListaDoble<String> lista = new ListaDoble<>(); //Crea una nueva lista doblemente enlazada vacía para agrupar los apartamentos de este bloque.
+                    lista.agregarAlFinal(apto.getCodigo() + " (" + apto.getNombre() + ")"); //lo guarda al final de la nueva lista.
+
+                    //nserta en el árbol un nuevo nodo con el número de bloque como clave y la lista recién creada como valor.
                     gruposPorBloque.insertar(new ParClaveValor<>(bloque, lista));
-                } else {
+                } else { //ncontró un nodo previo con ese mismo número de bloque.
                     par.getValor().agregarAlFinal(apto.getCodigo() + " (" + apto.getNombre() + ")");
                 }
             }
         }
 
         StringBuilder sb = new StringBuilder();
+        //usando su iterador inorden (el que revisaste al inicio), por lo que entrega cada entry ordenado ascendentemente por número de bloque
         for (ParClaveValor<Integer, ListaDoble<String>> entry : gruposPorBloque) {
             sb.append("Bloque ").append(entry.getClave()).append(": ").append(entry.getValor()).append(" ");
         }
+
+        //si no se encontró ningún apartamento alcanzable devuelve el mensaje por defecto, y en caso contrario retorna 0todo el texto acumulado.
         return sb.length() == 0 ? "Sin apartamentos agrupados." : sb.toString();
     }
+
+
+
+
+
+
+
+
+//Usa BFS para recorrer los apartamentos alcanzables
+// y los va metiendo en un árbol temporal ordenado por número de bloque (
 
     public ListaDoble<Apartamento> buscarDisponiblesOrdenados(LocalDate entrada, LocalDate salida, int personas, String criterio) {
         ListaDoble<Apartamento> resultado = new ListaDoble<>();
@@ -385,36 +535,81 @@ public class Hotel {
         return resultado;
     }
 
+
+
+
+
     public ListaDoble<Apartamento> asignarGrupoGrandeBacktracking(LocalDate entrada, LocalDate salida, int personas) {
+
+
+        //lista vacía para guardar
+        // los apartamentos que pueden usarse en esas fechas.
         ListaDoble<Apartamento> candidatos = new ListaDoble<>();
         for (Apartamento a : catalogoApartamentos) {
             if (estaDisponible(a, entrada, salida)) candidatos.agregarAlFinal(a);
+        //i el apartamento no tiene reservas cruzadas en esas fechas, lo agrega a la lista
         }
-        candidatos.ordenar(CMP_CAPACIDAD.reversed());
+        candidatos.ordenar(CMP_CAPACIDAD.reversed());//Ordena los candidatos de mayor a menor capacidad
 
-        ListaDoble<Apartamento> mejor = new ListaDoble<>();
+
+        ListaDoble<Apartamento> mejor = new ListaDoble<>();//ira fuardando la mejor combinacion
+
+        //Inicia la busqueda
         backtrack(candidatos, 0, personas, new ListaDoble<>(), mejor);
+
+        //Al terminar todas las combinaciones posibles, devuelve la mejor lista encontrada
         return mejor;
     }
 
+
+
     private void backtrack(ListaDoble<Apartamento> cands, int idx, int faltantes,
                            ListaDoble<Apartamento> actual, ListaDoble<Apartamento> mejor) {
-        if (faltantes <= 0) {
+
+
+        if (faltantes <= 0) { //Evalua si las condiciones de la lista ya cibren o superan  el total de perona
+
+            //mira sia la solucion encontrada es valida o si usa menos apartamentos
             if (mejor.estaVacia() || actual.getTam() < mejor.getTam()) {
+
+
+                //Vacía el contenido anterior de mejor eliminando su primer elemento repetidamente.
                 while (!mejor.estaVacia()) mejor.eliminar(mejor.obtener(0));
+               //opia uno a uno los apartamentos de actual dentro de mejor
                 for (Apartamento a : actual) mejor.agregarAlFinal(a);
             }
             return;
         }
+
+        //Detiene la exploración de esta rama si ocurre cualquiera de dos cosas
+        //Ya no quedan más apartamentos por revisar y aún faltan personas por ubicar.
+        //ya existe una solución guardada en mejor y la ruta actual no es mejor que la guardada
         if (idx >= cands.getTam() || (!mejor.estaVacia() && actual.getTam() >= mejor.getTam())) return;
 
         Apartamento elegido = cands.obtener(idx);
         actual.agregarAlFinal(elegido);
+
+        //vanza recursivamente al siguiente apartamento ,
+        // restando la capacidad máxima del apartamento elegido a las personas
         backtrack(cands, idx + 1, faltantes - elegido.getCapacidadMaxima(), actual, mejor);
+       //saca elegido de actual para dejar la lista limpia antes de probar el otro camino.
         actual.eliminar(elegido);
 
+
+        //Avanza al siguiente apartamento (idx + 1) sin haber usado elegido, manteniendo intacta la cantidad de personas faltantes.
         backtrack(cands, idx + 1, faltantes, actual, mejor);
     }
+
+
+
+
+
+
+
+//Recorre el catálogo de apartamentos y el historial de reservas contando
+// estados, canales,  conflictos, tiempos promedio de limpieza
+// e ingresos netos recaudados.
+
 
     public String generarReporteEstadisticas() {
         int totalAptos = catalogoApartamentos.getTam();
@@ -471,6 +666,19 @@ public class Hotel {
                 + "====================================================== ";
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void cargarEscenarioDesdeArchivo(String ruta) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
             String linea;
@@ -494,11 +702,6 @@ public class Hotel {
 
 
 
-
-    public static final Comparator<Apartamento> CMP_PRECIO = Comparator.comparingDouble(Apartamento::getTarifaPorPersona);
-    public static final Comparator<Apartamento> CMP_CAPACIDAD = Comparator.comparingInt(Apartamento::getCapacidadMaxima);
-    public static final Comparator<Apartamento> CMP_DORMITORIOS = Comparator.comparingInt(Apartamento::getNumDormitorios);
-    public static final Comparator<TareaLimpieza> CMP_PRIORIDAD_LIMPIEZA = Comparator.comparing(TareaLimpieza::isEntradaHoy).reversed().thenComparing(TareaLimpieza::getHoraLlegadaSiguiente).thenComparing(TareaLimpieza::getFechaSolicitud);
 
 
     public ArbolBinarioBusqueda<Apartamento> getCatalogoApartamentos() { return catalogoApartamentos; }

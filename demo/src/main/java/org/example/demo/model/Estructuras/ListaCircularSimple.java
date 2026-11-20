@@ -43,7 +43,7 @@ public class ListaCircularSimple<T> implements Iterable<T> {
         return new Iterator<T>() {
             private Nodo<T> actual = inicio;
             private int visitados = 0;
-            @Override public boolean hasNext() { return visitados < tam; }
+            @Override public boolean hasNext() { return visitados < tam; } //Compara los nodos visitados contra el tamaño total de la lista (tam). Mientras queden nodos por leer, devuelve true
             @Override public T next() {
                 if (!hasNext()) throw new NoSuchElementException();
                 T d = actual.getDato();

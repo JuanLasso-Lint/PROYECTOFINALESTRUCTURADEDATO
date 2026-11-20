@@ -63,9 +63,13 @@ public class Reserva implements Comparable<Reserva> {
         }
     }
 
+
+
+//bjeto no sea nulo, que no sea el mismo huésped titular
+// y que no esté ya registrado en la lista.
     public void agregarAcompanante(Huesped h) {
         if (h != null && !h.equals(titular) && !acompanantes.contiene(h)) {
-            acompanantes.agregarAlFinal(h);
+            acompanantes.agregarAlFinal(h); //si pasa las 3 condiciones lo agrega a la lista
         }
     }
 
@@ -77,36 +81,53 @@ public class Reserva implements Comparable<Reserva> {
         return ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
     }
 
+
+
+
+
     public void registrarMovimiento(String descripcion, double monto, boolean esCargo) {
         MovimientoFolio mov = new MovimientoFolio(descripcion, monto, esCargo);
-        folio.agregarAlFinal(mov);
-        historialFolio.apilar(mov);
+        folio.agregarAlFinal(mov); //Lo registra al final del estado de cuenta.
+        historialFolio.apilar(mov); //Lo pone en la cima de la pila de historial
     }
 
+    //Hace exactamente los mismos tres pasos anteriores, pero
+    // creando el movimiento con el tipo específico REEMBOLSO_O_ANULACION.
     public void registrarReembolsoOAnulacion(String descripcion, double monto) {
         MovimientoFolio mov = new MovimientoFolio(descripcion, monto, MovimientoFolio.TipoMovimiento.REEMBOLSO_O_ANULACION);
-        folio.agregarAlFinal(mov);
-        historialFolio.apilar(mov);
+        folio.agregarAlFinal(mov); //Lo registra al final del estado de cuenta.
+        historialFolio.apilar(mov); //Lo pone en la cima de la pila de historial.
     }
+
+
 
     public MovimientoFolio deshacerUltimoMovimiento() {
         if (historialFolio.estaVacia()) {
             throw new ReglaNegocioException("No hay movimientos en el folio para deshacer.");
         }
+
+        //Extrae el último movimiento registrado de la cima de la pila.
         MovimientoFolio ultimo = historialFolio.desapilar();
         if (ultimo.getTipo() == MovimientoFolio.TipoMovimiento.PAGO) {
             registrarReembolsoOAnulacion("Anulación de: " + ultimo.getDescripcion(), ultimo.getMonto());
+//Si lo último fue un pago, registra una anulación/reembolso por ese mismo monto.
         } else if (ultimo.getTipo() == MovimientoFolio.TipoMovimiento.CARGO) {
-            registrarMovimiento("Reverso cargo: " + ultimo.getDescripcion(), ultimo.getMonto(), false);
+//Si lo último fue un cargo, registra un movimiento inverso            registrarMovimiento("Reverso cargo: " + ultimo.getDescripcion(), ultimo.getMonto(), false);
         }
         return ultimo;
     }
 
+
+    //Recorre cada movimiento del folio usando el iterador
     public double calcularTotalPagadoNeto() {
         double pagado = 0.0;
         for (MovimientoFolio mov : folio) {
+
+            //Suma el dinero cuando el movimiento es un pago.
             if (mov.getTipo() == MovimientoFolio.TipoMovimiento.PAGO) {
                 pagado += mov.getMonto();
+
+//Resta el dinero cuando es un reembolso o anulación.
             } else if (mov.getTipo() == MovimientoFolio.TipoMovimiento.REEMBOLSO_O_ANULACION) {
                 pagado -= mov.getMonto();
             }
@@ -114,6 +135,10 @@ public class Reserva implements Comparable<Reserva> {
         return Math.max(0.0, pagado);
     }
 
+
+
+//suma únicamente los montos de los movimientos de
+// tipo CARGO y retorna el total acumulado.
     public double calcularTotalCargos() {
         double cargos = 0.0;
         for (MovimientoFolio mov : folio) {
@@ -124,6 +149,8 @@ public class Reserva implements Comparable<Reserva> {
         return cargos;
     }
 
+
+    //evalua si dos fechas estan en el mismo rango de fechas
     public boolean seSolapaCon(LocalDate otraEntrada, LocalDate otraSalida) {
         return fechaEntrada.isBefore(otraSalida) && otraEntrada.isBefore(fechaSalida);
     }

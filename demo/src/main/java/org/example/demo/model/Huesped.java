@@ -34,9 +34,15 @@ public class Huesped implements Comparable<Huesped> {
         return fecha != null ? Period.between(fecha, LocalDate.now()).getYears() : 30;
     }
 
+
+
+
     public boolean esMenorDeSeisAnios() {
         return getEdad() < 6;
     }
+
+
+
 
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }

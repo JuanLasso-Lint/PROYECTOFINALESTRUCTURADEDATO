@@ -17,6 +17,11 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
         this.tam = 0;
     }
 
+
+
+
+    //verifica que el dato no sea null y que no exista ya (buscar(dato)).
+    // Si está repetido, devuelve false
     public boolean insertar(T dato) {
         if (dato == null || buscar(dato)) {
             return false;
@@ -25,6 +30,14 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
         tam++;
         return true;
     }
+
+
+
+
+
+
+    //baja recursivamente comparando dato.compareTo(actual.getDato()):
+    // si da negativo va a la izquierda; si da positivo va a la derecha.
 
     private NodoArbol<T> insertarRec(NodoArbol<T> actual, T dato) {
         if (actual == null) return new NodoArbol<>(dato);
@@ -36,6 +49,13 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
         }
         return actual;
     }
+
+
+
+
+
+//"¿lo que busco es menor o mayor que tú?"
+// y así ignoras la mitad de la casa en cada paso hasta dar directo
 
     public boolean buscar(T datoBuscar) {
         return buscarElemento(datoBuscar) != null;
@@ -55,6 +75,15 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
                 : buscarElementoRec(actual.getDerecho(), datoBuscar);
     }
 
+
+
+
+
+
+
+
+//evisa todos los cuartos —izquierda y derecha
+// — hasta que alguno diga "¡yo cumplo la pista!".
     public boolean buscarRecursivo(Predicate<T> condicion) {
         return buscarRecursivoAux(raiz, condicion);
     }
@@ -66,6 +95,22 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
                 || buscarRecursivoAux(actual.getDerecho(), condicion);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void eliminar(T datoEliminar) {
         if (raiz == null) {
             throw new EstructuraVaciaException("El árbol está vacío, no se puede eliminar.");
@@ -75,6 +120,10 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
             tam--;
         }
     }
+
+
+    // si lolo tieene debajp un nodo engancha al de arriba con el de abajp
+    // si tiene dos nodo abajo
 
     private NodoArbol<T> eliminarRec(NodoArbol<T> actual, T datoEliminar) {
         if (actual == null) return null;
@@ -93,17 +142,34 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
         return actual;
     }
 
+
+
+
+// baja un paso a la derecha y luego se desliza todo a la izquierda
     private T encontrarMinimo(NodoArbol<T> nodo) {
         while (nodo.getIzquierdo() != null) nodo = nodo.getIzquierdo();
         return nodo.getDato();
     }
 
+
+
+
+//Cuenta cuántos pisos de cuartos
+// hay desde el techo hasta el cuarto que quedó más abajo en el suelo.
     public int altura() { return alturaRecursiva(raiz); }
 
     private int alturaRecursiva(NodoArbol<T> nodo) {
         if (nodo == null) return 0;
         return 1 + Math.max(alturaRecursiva(nodo.getIzquierdo()), alturaRecursiva(nodo.getDerecho()));
     }
+
+
+
+
+
+
+
+
 
     public int getTam() { return tam; }
     public boolean estaVacio() { return raiz == null; }
@@ -121,6 +187,10 @@ public class ArbolBinarioBusqueda<T extends Comparable<T>> implements Iterable<T
                 }
             }
 
+
+
+            //verifica si aún quedan nodos pendientes en la pila, y next() saca el nodo de la cima,
+            // deja preparada su rama derecha (si tiene) y devuelve su dato.
             @Override public boolean hasNext() { return !pila.estaVacia(); }
             @Override public T next() {
                 if (!hasNext()) throw new NoSuchElementException();

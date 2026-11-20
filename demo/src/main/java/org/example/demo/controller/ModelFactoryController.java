@@ -28,6 +28,8 @@ public class ModelFactoryController {
         inicializarDatosPorDefecto();
     }
 
+
+
     public static ModelFactoryController getInstance() {
         if (instance == null) {
             instance = new ModelFactoryController();
@@ -99,6 +101,7 @@ public class ModelFactoryController {
                     if (linea.isEmpty() || linea.startsWith("#")) continue;
                     String[] p = linea.split(";");
                     switch (p[0].toUpperCase()) {
+
                         case "APTO" -> hotel.registrarApartamento(new Apartamento(
                                 p[1], p[2], Integer.parseInt(p[6]), Integer.parseInt(p[3]),
                                 Integer.parseInt(p[5]), Integer.parseInt(p[4]), p[7],
@@ -107,11 +110,14 @@ public class ModelFactoryController {
                         case "HUESPED" -> hotel.registrarHuesped(new Huesped(
                                 p[1], p[2], p[3], LocalDate.parse(p[4]), Integer.parseInt(p[5]), p[6]));
                         case "EMPLEADO" -> hotel.registrarEmpleado(new Empleado(p[1], p[2], p[3]));
+
+
+
                     }
                 }
             }
         } else {
-            hotel.cargarEscenarioDesdeArchivo("escenario_prueba.txt");
+            hotel.cargarEscenarioDesdeArchivo("demo/escenario_de_prueba.txt");
         }
     }
 

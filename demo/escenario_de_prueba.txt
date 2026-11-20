@@ -1,0 +1,66 @@
+# ==============================================================================
+# ESCENARIO DE PRUEBA - SISTEMA DE GESTIÓN APARTA-SUITES UQ
+# Formatos:
+# APTO;codigo;nombre;piso;capacidad;dormitorios;bloque;caracteristica;tarifa
+# PASILLO;nodoOrigen;nodoDestino;distanciaMetros
+# HUESPED;nombre;apellido;documento;fechaNacimiento(AAAA-MM-DD);telefono;correo
+# EMPLEADO;nombre;codigo;cargo
+# ESTADO;codigoApto;EstadoOperativo;motivo
+# RESERVA;docHuesped;codigoApto;entrada;salida;canal;abono;accion(CONFIRMADA|EN_CURSO|FINALIZADA)
+# ==============================================================================
+
+# --- 1. APARTAMENTOS (Bloque 1 y Bloque 2, Pisos 1 al 3) ---
+APTO;101;Suite Jardin;1;4;2;1;Terraza privada y vista al parque;120000
+APTO;102;Estudio Ejecutivo;1;2;1;1;Escritorio ergonomico y wifi dedicado;95000
+APTO;201;Penthouse Familiar;2;6;3;1;Balcon panoramico y sala amplia;150000
+APTO;202;Aparta Suite Doble;2;4;2;1;Cocina integral equipada;115000
+APTO;301;Mirador Real;3;8;4;1;Jacuzzi privado y terraza;180000
+APTO;103;Loft del Bosque;1;3;1;2;Acceso directo a zona verde;105000
+APTO;203;Duplex Confort;2;5;2;2;Doble altura y vista interior;130000
+APTO;204;Suite Gran Familia;2;7;3;2;Sala comedor y lavanderia;160000
+
+# --- 2. MAPA DEL EDIFICIO (Grafo de pasillos y conexiones) ---
+PASILLO;Recepcion;EscalerasP1;5.0
+PASILLO;Recepcion;CuartoAseo;8.0
+PASILLO;CuartoAseo;EscalerasP1;6.0
+PASILLO;EscalerasP1;101;4.0
+PASILLO;101;102;3.0
+PASILLO;EscalerasP1;EscalerasP2;10.0
+PASILLO;EscalerasP2;201;4.0
+PASILLO;201;202;3.0
+PASILLO;EscalerasP2;EscalerasP3;10.0
+PASILLO;EscalerasP3;301;5.0
+
+# Conexión hacia el Bloque 2 (cerrar EscalerasP1 -> PasilloBloque2 aísla el Bloque 2)
+PASILLO;EscalerasP1;PasilloBloque2;12.0
+PASILLO;PasilloBloque2;103;4.0
+PASILLO;PasilloBloque2;EscalerasB2P2;9.0
+PASILLO;EscalerasB2P2;203;4.0
+PASILLO;203;204;3.5
+
+# --- 3. HUÉSPEDES (Documentos cortos 001 a 006; incluye menores de 6 años) ---
+HUESPED;Carlos;Mendez;001;1992-05-14;300123456;carlos.mendez@mail.com
+HUESPED;Laura;Gomez;002;1988-11-20;310987654;laura.gomez@mail.com
+HUESPED;Mateo;Rios;003;2022-03-10;320555444;familia.rios@mail.com
+HUESPED;Sofia;Vargas;004;1995-08-02;315222333;sofia.vargas@mail.com
+HUESPED;Andres;Castillo;005;1985-01-25;301444555;andres.castillo@mail.com
+HUESPED;Lucia;Castillo;006;2023-09-18;301444555;andres.castillo@mail.com
+
+# --- 4. EMPLEADOS (3 Recepcionistas para Lista Circular + Limpieza/Mantenimiento) ---
+EMPLEADO;Ana Torres;E01;Recepcionista
+EMPLEADO;Luis Perez;E02;Recepcionista
+EMPLEADO;Camila Rojas;E03;Recepcionista
+EMPLEADO;Marta Diaz;E04;Limpieza
+EMPLEADO;Jorge Nieto;E05;Mantenimiento
+
+# --- 5. RESERVAS Y ESTADÍSTICAS INICIALES ---
+# Reserva finalizada en Apto 102 (genera ingreso y deja el 102 pendiente de limpieza)
+RESERVA;004;102;2026-11-10;2026-11-14;DIRECTA;380000;FINALIZADA
+# Reserva en curso en Apto 101 (deja el 101 OCUPADO y suma ingreso)
+RESERVA;001;101;2026-11-18;2026-11-22;DIRECTA;480000;EN_CURSO
+# Reserva confirmada próxima en Apto 201 (suma anticipo de portal)
+RESERVA;002;201;2026-11-25;2026-11-28;PORTAL;300000;CONFIRMADA
+
+# --- 6. ESTADOS OPERATIVOS ADICIONALES ---
+ESTADO;202;EN_PREPARACION;Limpieza profunda programada
+ESTADO;203;FUERA_DE_SERVICO;Mantenimiento de aire acondicionado
